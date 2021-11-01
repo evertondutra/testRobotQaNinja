@@ -9,25 +9,22 @@ Login com sucesso
     go to                   ${url}/login
     login with              stark                          jarvis!
 
-    page should contain     Olá, Tony Stark. Você acessou a área logada!
+    Should See Logged User  Tony Stark
 
 Senha invalida
     [tags]                  login_error
     go to                   ${url}/login
     login with              stark                          jarvis
 
-    ${message}=             get webelement                 id:flash
-    should contain          ${message.text}                Senha é invalida!
-    page should contain     Senha é invalida!
+    Should contain login alert               Senha é invalida!
 
 Usuario nao Cadastrado
     [tags]                  user_error
     go to                   ${url}/login
     login with              star                          jarvis!
 
-    ${message}=             get webelement                 id:flash
-    should contain          ${message.text}                O usuário informado não está cadastrado!
-    page should contain     O usuário informado não está cadastrado!
+
+    Should contain login alert               O usuário informado não está cadastrado!
 
 
 *** Keywords ***
@@ -37,3 +34,13 @@ login with
     input text              css:input[name=username]        ${uname}
     input text              css:input[name=password]        ${pass}
     click element           class:btn-login
+
+Should contain login alert
+    [Arguments]             ${expect_message}
+    ${message}=             get webelement                 id:flash
+    should contain          ${message.text}                ${expect_message}
+    page should contain     ${expect_message}
+
+Should See Logged User
+    [Arguments]             ${full_name}
+    page should contain     Olá, ${full_name}. Você acessou a área logada!
